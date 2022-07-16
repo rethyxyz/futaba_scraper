@@ -26,9 +26,12 @@ main() {
 
 		[[ ! "$thread_title" ]] && thread_title="untitled"
 
-		[[ ! -d "$thread_title" ]] && mkdir -p "$thread_title"
+		[[ ! -d "$thread_title" ]] \
+			&& mkdir -p "$thread_title" \
+			&& action="MKDIR" \
+			|| action="EXISTS"
 
-		printf "${WARN}%s${ENDC}\n" "$thread_title"
+		printf "[${WARN}%s${ENDC}] %s\n" "$action" "$thread_title"
 
 		for ext in ${EXTS[@]}; do
 			# Get the thread_suburls that match the ext.
@@ -49,7 +52,7 @@ main() {
 					&& thread_suburl="https://$thread_suburl"
 
 				curl "$thread_suburl" 2> /dev/null > "$thread_title/$fname" \
-					&& printf "${GOOD}$thread_title/$fname${ENDC}\n"
+					&& printf "[${GOOD}GET${ENDC}] > $fname\n"
 			done
 		done
 	done
